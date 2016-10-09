@@ -54,7 +54,7 @@ public class SequenceManager : Singleton<SequenceManager> {
     {
         //clipValue = 
         
-        int noteID = order;// (int)Random.Range(0, (prefabs.Count - 1));
+        int noteID = (int)Random.Range(0, (prefabs.Count - 1));
         order++;
         if (order >= prefabs.Count)
         {

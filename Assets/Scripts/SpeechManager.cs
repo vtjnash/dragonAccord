@@ -12,16 +12,7 @@ public class SpeechManager : MonoBehaviour
     // Use this for initialization
     void Start()
     {
-        keywords.Add("Hello", () =>
-        {
-            BroadcastMessage("OnPlaceNote");
-            /*var focusObject = GazeManager.Instance.FocusedObject;
-            if (focusObject != null)
-            {
-                // Call the OnDrop method on just the focused object.
-                focusObject.SendMessage("OnMoveSomewhere");
-            }*/
-        });
+
 
         keywords.Add("Place Note", () =>
         {
@@ -55,6 +46,16 @@ public class SpeechManager : MonoBehaviour
             }
         });
 
+        keywords.Add("Remove", () =>
+        {
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnRemove");
+            }
+        });
+
         keywords.Add("Stop", () =>
         {
 
@@ -63,6 +64,17 @@ public class SpeechManager : MonoBehaviour
             {
                 // Call the OnDrop method on just the focused object.
                 focusObject.SendMessage("OnStop");
+            }
+        });
+
+        keywords.Add("Change", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnChange");
             }
         });
 

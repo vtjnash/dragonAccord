@@ -234,10 +234,12 @@ public class MusicNode : MonoBehaviour {
         Stopped = false;
     }
 
-    /*public void OnSelect()
+    public void OnRemove()
     {
-       // rigger rotationt Editing = true;
-    }*/
+        OnStop();
+        gameObject.SetActive(false);
+
+    }
 
     public void OnEditing()
     {

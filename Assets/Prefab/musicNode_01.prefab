@@ -42,7 +42,6 @@ GameObject:
   - 4: {fileID: 4000013514995862}
   - 33: {fileID: 33000010401388676}
   - 23: {fileID: 23000011325836352}
-  - 65: {fileID: 65000013745548526}
   m_Layer: 0
   m_Name: pedestal
   m_TagString: Untagged
@@ -182,18 +181,6 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000011724962250}
   m_Mesh: {fileID: 4300000, guid: 6e2ff22b4bbb8e643985cae4f941ec82, type: 3}
---- !u!65 &65000013745548526
-BoxCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000012168556754}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 0.29999998, y: 0.29999998, z: 0.34}
-  m_Center: {x: 0, y: 2.5899872e-16, z: 0.17}
 --- !u!82 &82000012762219502
 AudioSource:
   m_ObjectHideFlags: 1
@@ -212,7 +199,7 @@ AudioSource:
   Spatialize: 0
   Priority: 160
   DopplerLevel: 0.01
-  MinDistance: 0.13982058
+  MinDistance: 2
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0

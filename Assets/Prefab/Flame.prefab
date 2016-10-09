@@ -56,10 +56,10 @@ GameObject:
   - 4: {fileID: 4000012226418070}
   - 198: {fileID: 198000010768753376}
   - 199: {fileID: 199000012931695902}
-  - 135: {fileID: 135000012372445868}
-  - 82: {fileID: 82000013990204148}
   - 114: {fileID: 114000013734797794}
   - 114: {fileID: 114000013627542000}
+  - 82: {fileID: 82000013496632818}
+  - 65: {fileID: 65000012206813016}
   m_Layer: 0
   m_Name: Flame
   m_TagString: Untagged
@@ -176,6 +176,18 @@ MeshFilter:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1000013122363722}
   m_Mesh: {fileID: 4300000, guid: 1f75c2285c66a2f45851c61b280b9e93, type: 3}
+--- !u!65 &65000012206813016
+BoxCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1000013624420810}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.29999998, y: 0.29999998, z: 0.34}
+  m_Center: {x: 0, y: 2.5899872e-16, z: 0.17}
 --- !u!65 &65000013776697838
 BoxCollider:
   m_ObjectHideFlags: 1
@@ -188,7 +200,7 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.29999998, y: 0.29999998, z: 0.34}
   m_Center: {x: 0, y: 2.5899872e-16, z: 0.17}
---- !u!82 &82000013990204148
+--- !u!82 &82000013496632818
 AudioSource:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -206,7 +218,7 @@ AudioSource:
   Spatialize: 0
   Priority: 160
   DopplerLevel: 0.01
-  MinDistance: 0.13982058
+  MinDistance: 2
   MaxDistance: 500
   Pan2D: 0
   rolloffMode: 0
@@ -301,25 +313,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b70855b105f7414397f24e69428803e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 82000013990204148}
+  audioSource: {fileID: 82000013496632818}
   particles:
   - {fileID: 1000012689092816}
   - {fileID: 1000014048318176}
   Id: 0
   Stopped: 0
   masterSource: {fileID: 0}
---- !u!135 &135000012372445868
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013624420810}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.00125
-  m_Center: {x: -2.910383e-10, y: -6.9849193e-10, z: 0}
 --- !u!198 &198000010433937816
 ParticleSystem:
   m_ObjectHideFlags: 1

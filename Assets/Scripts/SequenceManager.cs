@@ -66,7 +66,8 @@ public class SequenceManager : Singleton<SequenceManager> {
 
         note.transform.parent = sequence.transform;
         MusicNode musicNode = (note.GetComponent<MusicNode>() as MusicNode);
-       // musicNode.GetComponent<AudioSource>
+        // musicNode.GetComponent<AudioSource>
+        musicNode.SetNodeID(noteID);
         musicNode.SetAnchorID("node"+ musicNodes.Count.ToString());
         musicNode.SetAudioClip(audioClips[noteID]);
         musicNodes.Add(note);

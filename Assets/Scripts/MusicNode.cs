@@ -16,6 +16,31 @@ public class MusicNode : MonoBehaviour {
     public bool IsSynced { get; private set; }
     public bool AnchorLocked { get; private set; }
 
+    private static Color[] colors =
+    {
+        Color.white, //0
+        Color.white,
+        Color.white,
+        Color.white,
+        Color.white,
+        Color.white, //5
+        Color.red,
+        Color.white,
+        Color.white,
+        Color.white,
+        Color.red, //10        
+        Color.white,
+        Color.white,
+        Color.red,
+        Color.white,
+        Color.white, //15
+        Color.white,
+        Color.white,
+        Color.white,
+        Color.white,
+        Color.white // 20
+    };
+
     public int Id;
 
     public bool Stopped;
@@ -212,8 +237,23 @@ public class MusicNode : MonoBehaviour {
             }
         }
         
-        
-
+        if (Id > 0 && Id < colors.Length && colors[Id] != Color.white)
+        {
+            Color baseColor = Stopped ? Color.gray : colors[Id];
+            
+            Renderer[] rs = GetComponentsInChildren<Renderer>();
+            for (int i = 0; i < rs.Length; i++)
+            {
+                Renderer r = rs[i];
+                if (r.material.HasProperty("_TintColor"))
+                {
+                    Color c = baseColor;
+                    Color c0 = r.material.GetColor("_TintColor");
+                    c.a = c0.a;
+                    r.material.SetColor("_TintColor", c);
+                }
+            }
+        }
     }
 
     public void OnSelect()
@@ -226,7 +266,6 @@ public class MusicNode : MonoBehaviour {
         Stopped = true;
         audioSource.Stop();
         IsSynced = false;
-
     }
 
     public void OnPlay()

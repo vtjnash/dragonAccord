@@ -11,7 +11,6 @@ public class ResizeOnGaze : MonoBehaviour {
     public float objScaleMax = 5f;
     public float maxDotSize = 40f;
 	public GameObject dotTemplate;
-	public Camera gazecamera;
 	public GameObject twoDimTemplate;
 
 	private Material material;
@@ -24,17 +23,21 @@ public class ResizeOnGaze : MonoBehaviour {
 	private float width;
 	private float height;
 	private float fov;
+    private Camera gazecamera;
 
-		void Start() {
-		material = GetComponent<Renderer>().material;
-		alpha = Shader.PropertyToID("_Color");
+    void Start() {
+        material = GetComponent<Renderer>().material;
+        gazecamera = Camera.main;
+        alpha = Shader.PropertyToID("_TintColor");
 
-		dot = (GameObject)Instantiate(dotTemplate, dotTemplate.GetComponentInParent<Transform>());
-		youPosition = dot.transform.localPosition;
-		dot.SetActive(true);
-		//dotMaterial = dot.GetComponent<Renderer>().material;
+        if (dotTemplate != null) {
+            dot = (GameObject)Instantiate(dotTemplate, dotTemplate.GetComponentInParent<Transform>());
+            youPosition = dot.transform.localPosition;
+            dot.SetActive(true);
+            //dotMaterial = dot.GetComponent<Renderer>().material;
+        }
 
-		clientRect = twoDimTemplate.GetComponentInParent<Transform>();
+        clientRect = twoDimTemplate.GetComponentInParent<Transform>();
 		twoDimObj = (GameObject)Instantiate(twoDimTemplate, clientRect);
 
 		width = Screen.currentResolution.width / 4;
@@ -52,7 +55,7 @@ public class ResizeOnGaze : MonoBehaviour {
 		//Vector3 ray = gazecamera.WorldToScreenPoint();
 		//Vector3 ray;
 
-		{ // do update dot
+		if (dot != null) { // do update dot
 			Vector3 newPosition = new Vector3(objray.x, -objray.z, 0) * worldScale;
 			float dotSize = newPosition.magnitude;
 			if (dotSize > maxDotSize) {

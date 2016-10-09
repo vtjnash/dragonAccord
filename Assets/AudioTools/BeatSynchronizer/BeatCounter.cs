@@ -14,8 +14,9 @@ public class BeatCounter : Singleton<BeatCounter> {
 	
 	public BeatValue beatValue = BeatValue.QuarterBeat;
 	public int beatScalar = 1;
+    
 	public BeatValue beatOffset = BeatValue.None;
-	public bool negativeBeatOffset = false;
+    public bool negativeBeatOffset = false;
 	public BeatType beatType = BeatType.OnBeat;
 	public float loopTime = 30f;
 	public AudioSource audioSource;
@@ -27,7 +28,21 @@ public class BeatCounter : Singleton<BeatCounter> {
 	private float sampleOffset;
 	private float currentSample;
 
-	
+    private float currentCoroutineTime;
+
+    /// <summary>
+    /// Sniejadlik : modfying to allow for full bar check as well as beat check.
+    /// </summary>
+    /// 
+
+    public BeatValue barValue = BeatValue.WholeBeat;
+    public int barScalar = 1;
+    public BeatValue barOffset = BeatValue.None;
+    private float nextBarSample;
+    private float barSamplePeriod;
+    private float barSampleOffset;
+    
+
     void Start()
     {
         //ArrayList = new ArrayList<GameObject>();
@@ -39,6 +54,7 @@ public class BeatCounter : Singleton<BeatCounter> {
 		float audioBpm = audioSource.GetComponent<BeatSynchronizer>().bpm;
 		samplePeriod = (60f / (audioBpm * BeatDecimalValues.values[(int)beatValue])) * audioSource.clip.frequency;
 
+
 		if (beatOffset != BeatValue.None) {
 			sampleOffset = (60f / (audioBpm * BeatDecimalValues.values[(int)beatOffset])) * audioSource.clip.frequency;
 			if (negativeBeatOffset) {
@@ -49,7 +65,33 @@ public class BeatCounter : Singleton<BeatCounter> {
 		samplePeriod *= beatScalar;
 		sampleOffset *= beatScalar;
 		nextBeatSample = 0f;
-	}
+
+
+        barSamplePeriod = (60f / (audioBpm * BeatDecimalValues.values[(int)barValue])) * audioSource.clip.frequency;
+
+
+        if (barOffset != BeatValue.None)
+        {
+            barSampleOffset = (60f / (audioBpm * BeatDecimalValues.values[(int)barOffset])) * audioSource.clip.frequency;
+        }
+
+        barSamplePeriod *= barScalar;
+        barSampleOffset *= barScalar;
+        nextBarSample = 0f;
+    }
+
+    void Update()
+    {
+        //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "Update";
+        if (Mathf.Abs(Time.time - currentCoroutineTime) > 2f)
+        {
+            currentCoroutineTime = Time.time;
+            StartCoroutine(BeatCheck());
+            //OnDisable();
+            //OnEnable();
+
+        }
+    }
 
 	/// <summary>
 	/// Initializes and starts the coroutine that checks for beat occurrences. The nextBeatSample field is initialized to 
@@ -59,14 +101,17 @@ public class BeatCounter : Singleton<BeatCounter> {
 	void StartBeatCheck (double syncTime)
 	{
 		nextBeatSample = (float)syncTime * audioSource.clip.frequency;
-		StartCoroutine(BeatCheck());
-	}
+        nextBarSample = (float)syncTime * audioSource.clip.frequency;
+        StartCoroutine(BeatCheck());
+
+    }
 	
 	/// <summary>
 	/// Subscribe the BeatCheck() coroutine to the beat synchronizer's event.
 	/// </summary>
 	void OnEnable ()
 	{
+        //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "OnEnable" + Random.Range(0f, 100f);
 		BeatSynchronizer.OnAudioStart += StartBeatCheck;
 	}
 
@@ -79,7 +124,8 @@ public class BeatCounter : Singleton<BeatCounter> {
 	/// </remarks>
 	void OnDisable ()
 	{
-		BeatSynchronizer.OnAudioStart -= StartBeatCheck;
+        //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "OnDisable" + Random.Range(0f,100f) ;
+        BeatSynchronizer.OnAudioStart -= StartBeatCheck;
 	}
 
 	/// <summary>
@@ -94,21 +140,40 @@ public class BeatCounter : Singleton<BeatCounter> {
 	/// </remarks>
 	IEnumerator BeatCheck ()
 	{
-		while (audioSource.isPlaying) {
-			currentSample = (float)AudioSettings.dspTime * audioSource.clip.frequency;
-			
-			if (currentSample >= (nextBeatSample + sampleOffset)) {
+        
+        while (audioSource.isPlaying) {
+            currentCoroutineTime = Time.time;
+            currentSample = (float)AudioSettings.dspTime * audioSource.clip.frequency;
+            GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "BeatCheck" + Random.Range(0f, 100f);
+            if (currentSample >= (nextBeatSample + sampleOffset)) {
 
                 /// GROUND THE PCM TIMESCALE BEFORE BLASTING ALL OBSERVERS FOR SYNCING
                 SequenceManager.Instance.OnBeatMasterSync();
 
                 foreach (GameObject obj in observersList) {
-					obj.GetComponent<BeatObserver>().BeatNotify(beatType);
-				}
+                    obj.GetComponent<BeatObserver>().BeatNotify(beatType);
+                }
 				nextBeatSample += samplePeriod;
 			}
 
-			yield return new WaitForSeconds(loopTime / 1000f);
+
+
+            if (currentSample >= (nextBarSample + barSampleOffset))
+            {
+
+                /// GROUND THE PCM TIMESCALE BEFORE BLASTING ALL OBSERVERS FOR SYNCING
+                SequenceManager.Instance.OnBeatMasterSync();
+
+                foreach (GameObject obj in observersList)
+                {
+                    obj.GetComponent<BeatObserver>().BarNotify(beatType);
+                }
+                nextBarSample += barSamplePeriod;
+            }
+
+            //Debug.Log(nextBeatSample + sampleOffset + "   " + nextBarSample + barSampleOffset);
+
+            yield return new WaitForSeconds(loopTime / 1000f);
 		}
 	}
 

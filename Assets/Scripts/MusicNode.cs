@@ -6,20 +6,22 @@ using UnityEngine.VR.WSA;
 public class MusicNode : MonoBehaviour {
 
     public AudioSource audioSource;
-    public ParticleSystem[] particles;
+    public GameObject[] particles;
 
     public string ObjectAnchorStoreName { get; private set; }
     private WorldAnchorStore anchorStore;
 
     public bool Moving { get; private set; }
+    public bool Editing { get; private set; }
+    public bool IsSynced { get; private set; }
     public bool AnchorLocked { get; private set; }
 
     public AudioSource masterSource;
 
     // Use this for initialization
     void Start () {
-        
 
+        OnUnlock();
     }
 
     public void SetAnchorID(string id)
@@ -45,28 +47,36 @@ public class MusicNode : MonoBehaviour {
     public void SetMasterAudioSync(AudioSource masterAudio)
     {
         masterSource = masterAudio;
+
+        int i;
+        int limit = particles.Length;
+        for (i = 0; i < limit; ++i)
+        {
+            /*ParticleSystem ps = particles[i].GetComponent<ParticleSystem>();
+            //Debug.Log("particles" + i);
+            var em = ps.emission;
+            em.enabled = true;
+
+            em.type = ParticleSystemEmissionType.Time;
+
+            em.rate = SequenceManager.Instance.bpm / 10;
+
+            em.SetBursts(
+                    new ParticleSystem.Burst[]{
+                        new ParticleSystem.Burst(0.0f, 100)
+                    });*/
+        }
     }
 
     // Update is called once per frame
     void Update () {
         
         //Debug.Log(masterSource.timeSamples);
-        /*float freq = audioClip.clip.frequency;
-        if (audioClip.isPlaying)
+        //float freq = audioSource.clip.frequency;
+        if (audioSource.isPlaying)
         {
-            int i;
-            int limit = particles.Length;
-            for (i=0;i<limit;++i)
-            {
-                ParticleSystem ps = particles[i].GetComponent<ParticleSystem>();
-                var em = ps.emission;
-                em.enabled = true;
-
-                em.type = ParticleSystemEmissionType.Time;
-                
-                em.rate = SequenceManager.Instance.bpm;
-            }
-        }*/
+            /**/
+        }
 
         if (Moving)
         {
@@ -94,7 +104,11 @@ public class MusicNode : MonoBehaviour {
     public void SetAnchorLock(bool value)
     {
         AnchorLocked = value;
-       // this.transform.Find("Lock").gameObject.SetActive(!value);
+        // this.transform.Find("Lock").gameObject.SetActive(!value);
+        Material outerShell = this.GetComponent<Renderer>().materials[1];
+        outerShell.SetColor(0,Color.clear);
+        //outerShell.
+        Debug.Log(this.GetComponent<Renderer>().materials[1].GetColor(0));
         if (anchorStore == null)
         {
             //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text += " NO ANCHOR STORE";
@@ -135,20 +149,40 @@ public class MusicNode : MonoBehaviour {
         }
     }
 
-
     public void OnBeat()
     {
-        
-        //Debug.Log("On Beat" + this.ObjectAnchorStoreName + " "+audioSource.isPlaying);
+        // on bar trigger
+        //Debug.Log("onBeat");
         if (audioSource.isPlaying)
         {
 
-            //audioSource.Stop();
-            //audioSource.Play();
+            int i;
+            int limit = particles.Length;
+            for (i = 0; i < limit; ++i)
+            {
+                ParticleSystem ps = particles[i].GetComponent<ParticleSystem>();
+                //Debug.Log("particles" + i);
+                var em = ps.emission;
+                em.enabled = true;
+                ps.Emit(10);
+            }
 
-            //TODO: sync clips with % 3 if beyond threshold then reset to previous nearest rounded divisible 
-            // ask jameson to repeat what he said about mod rounding it sounds nice.
-            audioSource.timeSamples = masterSource.timeSamples;
+            //em.burstCount = SequenceManager.Instance.bpm / 10;
+        }
+    }
+
+    public void OnBar()
+    {
+       // Debug.Log("onBar");
+        //Debug.Log("On Beat" + this.ObjectAnchorStoreName + " "+audioSource.isPlaying);
+        if (audioSource.isPlaying)
+        {
+            
+            if (!IsSynced && audioSource.timeSamples < 1f)
+            {
+                audioSource.timeSamples = masterSource.timeSamples;
+                IsSynced = true;
+            }
         }
         else
         {
@@ -165,27 +199,35 @@ public class MusicNode : MonoBehaviour {
 
     public void OnSelect()
     {
-
+       // rigger rotationt Editing = true;
     }
+
+    public void OnEditing()
+    {
+        Editing = true;
+    }
+
 
     public void OnMove()
     {
+        Moving = true;
 
     }
 
     public void OnDrop()
     {
-
+        Moving = false;
     }
 
     public void OnLock()
     {
-
+        SetAnchorLock(true);
+        Editing = false;
     }
 
     public void OnUnlock()
     {
-
+        SetAnchorLock(false);
     }
 
 

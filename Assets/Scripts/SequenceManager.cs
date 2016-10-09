@@ -9,6 +9,7 @@ public class SequenceManager : Singleton<SequenceManager> {
     public GameObject Cursor;
     public GameObject NotePrefab;
 
+    public List<GameObject> prefabs;
     public List<AudioClip> audioClips;
     public List<GameObject> musicNodes;
 
@@ -23,10 +24,7 @@ public class SequenceManager : Singleton<SequenceManager> {
 	void Start () {
         playbackTime = 0f;
         bpm = 80f;
-        
-       // OnPlaceNote();
-       // OnPlaceNote();
-       // OnPlaceNote();
+
     }
 	
 	// Update is called once per frame
@@ -45,7 +43,7 @@ public class SequenceManager : Singleton<SequenceManager> {
 
     public void OnPlaceNote()
     {
-        
+        //clipValue = 
         GameObject note = Instantiate(NotePrefab, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
 
         note.transform.parent = sequence.transform;

@@ -144,7 +144,7 @@ public class BeatCounter : Singleton<BeatCounter> {
         while (audioSource.isPlaying) {
             currentCoroutineTime = Time.time;
             currentSample = (float)AudioSettings.dspTime * audioSource.clip.frequency;
-            GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "BeatCheck" + Random.Range(0f, 100f);
+            //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "BeatCheck" + Random.Range(0f, 100f);
             if (currentSample >= (nextBeatSample + sampleOffset)) {
 
                 /// GROUND THE PCM TIMESCALE BEFORE BLASTING ALL OBSERVERS FOR SYNCING

@@ -13,6 +13,8 @@ public class SequenceManager : Singleton<SequenceManager> {
     public List<AudioClip> audioClips;
     public List<GameObject> musicNodes;
 
+    private int order;
+
     public GameObject sequence;
 
     public AudioSource masterAudio;
@@ -24,6 +26,7 @@ public class SequenceManager : Singleton<SequenceManager> {
 	void Start () {
         playbackTime = 0f;
         bpm = 80f;
+        order = 0;
 
     }
 	
@@ -41,16 +44,31 @@ public class SequenceManager : Singleton<SequenceManager> {
         
     }
 
+    public void DestroyNode(int id)
+    {
+       // musicNodes[id]
+        //BeatCounter.Instance.observersList[id]
+    }
+
     public void OnPlaceNote()
     {
         //clipValue = 
-        GameObject note = Instantiate(NotePrefab, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
+        
+        int noteID = order;// (int)Random.Range(0, (prefabs.Count - 1));
+        order++;
+        if (order >= prefabs.Count)
+        {
+            order = 0;
+        }
+        Debug.Log(noteID);
+        GameObject prefabNote = prefabs[noteID];
+        GameObject note = Instantiate(prefabNote, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
 
         note.transform.parent = sequence.transform;
         MusicNode musicNode = (note.GetComponent<MusicNode>() as MusicNode);
        // musicNode.GetComponent<AudioSource>
         musicNode.SetAnchorID("node"+ musicNodes.Count.ToString());
-        musicNode.SetAudioClip(audioClips[(int)Random.Range(0, audioClips.Count - 1)]);
+        musicNode.SetAudioClip(audioClips[noteID]);
         musicNodes.Add(note);
         musicNode.SetMasterAudioSync(masterAudio);
         BeatCounter.Instance.observersList.Add(note);

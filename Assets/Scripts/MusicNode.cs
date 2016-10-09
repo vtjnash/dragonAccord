@@ -16,11 +16,15 @@ public class MusicNode : MonoBehaviour {
     public bool IsSynced { get; private set; }
     public bool AnchorLocked { get; private set; }
 
+    public int Id;
+
+    public bool Stopped;
+
     public AudioSource masterSource;
 
     // Use this for initialization
     void Start () {
-
+        
         OnUnlock();
     }
 
@@ -29,6 +33,11 @@ public class MusicNode : MonoBehaviour {
         //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text = "ID= "+id;
         ObjectAnchorStoreName = id;
         WorldAnchorStore.GetAsync(AnchorStoreReady);
+    }
+
+    public void SetNodeID(int id)
+    {
+        Id = id;
     }
 
     public string GetAnchorID()
@@ -105,10 +114,10 @@ public class MusicNode : MonoBehaviour {
     {
         AnchorLocked = value;
         // this.transform.Find("Lock").gameObject.SetActive(!value);
-        Material outerShell = this.GetComponent<Renderer>().materials[1];
-        outerShell.SetColor(0,Color.clear);
+        //Material outerShell = this.GetComponent<Renderer>().materials[1];
+        //outerShell.SetColor(0,Color.clear);
         //outerShell.
-        Debug.Log(this.GetComponent<Renderer>().materials[1].GetColor(0));
+       // Debug.Log(this.GetComponent<Renderer>().materials[1].GetColor(0));
         if (anchorStore == null)
         {
             //GameObject.Find("DebugLayer").GetComponent<TextMesh>().text += " NO ANCHOR STORE";
@@ -167,6 +176,7 @@ public class MusicNode : MonoBehaviour {
                 ps.Emit(10);
             }
 
+            
             //em.burstCount = SequenceManager.Instance.bpm / 10;
         }
     }
@@ -175,32 +185,59 @@ public class MusicNode : MonoBehaviour {
     {
        // Debug.Log("onBar");
         //Debug.Log("On Beat" + this.ObjectAnchorStoreName + " "+audioSource.isPlaying);
-        if (audioSource.isPlaying)
+        if (!Stopped)
         {
-            
-            if (!IsSynced && audioSource.timeSamples < 1f)
+            if (audioSource.isPlaying)
             {
+                if (GetComponent<Animation>() != null)
+                {
+                    Animation anim = GetComponent<Animation>();
+                    anim.Play();
+                }
+
+                if (!IsSynced && audioSource.timeSamples < 1f)
+                {
+                    audioSource.timeSamples = masterSource.timeSamples;
+                    IsSynced = true;
+                }
+            }
+            else
+            {
+               // audioSource.timeSamples = masterSource.timeSamples;
+               // Debug.Log(audioSource.timeSamples + "  " + masterSource.timeSamples);
+                audioSource.PlayScheduled(0);
                 audioSource.timeSamples = masterSource.timeSamples;
-                IsSynced = true;
+                // 
+
             }
         }
-        else
-        {
-           // audioSource.timeSamples = masterSource.timeSamples;
-           // Debug.Log(audioSource.timeSamples + "  " + masterSource.timeSamples);
-            audioSource.PlayScheduled(0);
-            audioSource.timeSamples = masterSource.timeSamples;
-            // 
-
-        }
+        
         
 
     }
 
     public void OnSelect()
     {
-       // rigger rotationt Editing = true;
+        //SequenceManager.Instance.DestroyNode(Id);
     }
+
+    public void OnStop()
+    {
+        Stopped = true;
+        audioSource.Stop();
+        IsSynced = false;
+
+    }
+
+    public void OnPlay()
+    {
+        Stopped = false;
+    }
+
+    /*public void OnSelect()
+    {
+       // rigger rotationt Editing = true;
+    }*/
 
     public void OnEditing()
     {

@@ -55,6 +55,29 @@ public class SpeechManager : MonoBehaviour
             }
         });
 
+        keywords.Add("Stop", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnStop");
+            }
+        });
+
+        keywords.Add("Play", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnPlay");
+            }
+        });
+
+
         keywords.Add("Lock", () =>
         {
 

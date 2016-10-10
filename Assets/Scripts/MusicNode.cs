@@ -6,7 +6,11 @@ using UnityEngine.VR.WSA;
 public class MusicNode : MonoBehaviour {
 
     public AudioSource audioSource;
-    public GameObject[] particles;
+    public ParticleSystem[] particles;
+    public Animation[] animations;
+
+    public GameObject clipMarker;
+    public GameObject clipPrefab;
 
     public string ObjectAnchorStoreName { get; private set; }
     private WorldAnchorStore anchorStore;
@@ -15,6 +19,10 @@ public class MusicNode : MonoBehaviour {
     public bool Editing { get; private set; }
     public bool IsSynced { get; private set; }
     public bool AnchorLocked { get; private set; }
+
+    private float timeScale = 1;
+    private float maxSolid = 0;
+    private float timeBase = 0;
 
     private static Color[] colors =
     {
@@ -77,29 +85,24 @@ public class MusicNode : MonoBehaviour {
         
 
     }
+    public void SetClipMarker(GameObject marker)
+    {
+        clipPrefab = marker;
+        clipMarker = Instantiate(marker, transform.position, Quaternion.identity) as GameObject;
+        clipMarker.transform.parent = this.transform;
+        particles = clipMarker.GetComponentsInChildren<ParticleSystem>();
+        animations = clipMarker.GetComponentsInChildren<Animation>();
+    }
+
+    public void DestroyClipMarker()
+    {
+        Destroy(clipMarker);
+    }
 
     public void SetMasterAudioSync(AudioSource masterAudio)
     {
         masterSource = masterAudio;
 
-        int i;
-        int limit = particles.Length;
-        for (i = 0; i < limit; ++i)
-        {
-            /*ParticleSystem ps = particles[i].GetComponent<ParticleSystem>();
-            //Debug.Log("particles" + i);
-            var em = ps.emission;
-            em.enabled = true;
-
-            em.type = ParticleSystemEmissionType.Time;
-
-            em.rate = SequenceManager.Instance.bpm / 10;
-
-            em.SetBursts(
-                    new ParticleSystem.Burst[]{
-                        new ParticleSystem.Burst(0.0f, 100)
-                    });*/
-        }
     }
 
     // Update is called once per frame
@@ -133,6 +136,7 @@ public class MusicNode : MonoBehaviour {
         }
 
     }
+
 
 
     public void SetAnchorLock(bool value)
@@ -189,21 +193,32 @@ public class MusicNode : MonoBehaviour {
         //Debug.Log("onBeat");
         if (audioSource.isPlaying)
         {
-
-            int i;
-            int limit = particles.Length;
-            for (i = 0; i < limit; ++i)
+            if (clipMarker != null)
             {
-                ParticleSystem ps = particles[i].GetComponent<ParticleSystem>();
-                //Debug.Log("particles" + i);
-                var em = ps.emission;
-                em.enabled = true;
-                ps.Emit(10);
+                int i;
+                int limit = (particles.Length > 2) ? 2 : particles.Length;
+                for (i = 0; i < limit; ++i)
+                {
+                    ParticleSystem ps = particles[i];
+                   //Debug.Log("particles" + i);
+                   var em = ps.emission;
+                    em.enabled = true;
+                    ps.Emit(10);
+                }
+                Vector3 startScale = transform.localScale;
+                /*transform.localScale = Vector3.Lerp(startScale,startScale*2,Mathf.Sin(Time.time));
+                float scale = ((Time.time - timeBase) / timeScale) % 1f;
+                transform.localScale = new Vector3(scale, scale, scale);*/
             }
 
-            
+
             //em.burstCount = SequenceManager.Instance.bpm / 10;
         }
+    }
+
+    public void FlagSync()
+    {
+        IsSynced = false;
     }
 
     public void OnBar()
@@ -214,9 +229,11 @@ public class MusicNode : MonoBehaviour {
         {
             if (audioSource.isPlaying)
             {
-                if (GetComponent<Animation>() != null)
+                int i;
+                int limit = animations.Length;// > 2) ? 2 : animations.Length;
+                for (i = 0; i < limit; ++i)
                 {
-                    Animation anim = GetComponent<Animation>();
+                    Animation anim = animations[i];
                     anim.Play();
                 }
 
@@ -233,31 +250,46 @@ public class MusicNode : MonoBehaviour {
                 audioSource.PlayScheduled(0);
                 audioSource.timeSamples = masterSource.timeSamples;
                 // 
+                if (clipMarker != null)
+                {
+                    if (Id > 0 && Id < colors.Length && colors[Id] != Color.white)
+                    {
+                        Color baseColor = Stopped ? Color.gray : colors[Id];
+
+                        Renderer[] rs = GetComponentsInChildren<Renderer>();
+                        for (int i = 0; i < rs.Length; i++)
+                        {
+                            Renderer r = rs[i];
+                            if (r.material.HasProperty("_TintColor"))
+                            {
+                                Color c = baseColor;
+                                Color c0 = r.material.GetColor("_TintColor");
+                                c.a = c0.a;
+                                r.material.SetColor("_TintColor", c);
+                            }
+                        }
+                    }
+                }
+                
 
             }
         }
         
-        if (Id > 0 && Id < colors.Length && colors[Id] != Color.white)
-        {
-            Color baseColor = Stopped ? Color.gray : colors[Id];
-            
-            Renderer[] rs = GetComponentsInChildren<Renderer>();
-            for (int i = 0; i < rs.Length; i++)
-            {
-                Renderer r = rs[i];
-                if (r.material.HasProperty("_TintColor"))
-                {
-                    Color c = baseColor;
-                    Color c0 = r.material.GetColor("_TintColor");
-                    c.a = c0.a;
-                    r.material.SetColor("_TintColor", c);
-                }
-            }
-        }
+        
     }
 
     public void OnSelect()
     {
+        if (Moving)
+        {
+            SequenceManager.Instance.Drop();// OnDrop();
+        }
+        else
+        {
+            SequenceManager.Instance.Move();
+            // OnMove();
+        }
+        
         //SequenceManager.Instance.DestroyNode(Id);
     }
 
@@ -266,6 +298,13 @@ public class MusicNode : MonoBehaviour {
         Stopped = true;
         audioSource.Stop();
         IsSynced = false;
+        int i;
+        int limit = animations.Length;// > 2) ? 2 : animations.Length;
+        for (i = 0; i < limit; ++i)
+        {
+            Animation anim = animations[i];
+            anim.Stop();
+        }
     }
 
     public void OnPlay()
@@ -273,11 +312,14 @@ public class MusicNode : MonoBehaviour {
         Stopped = false;
     }
 
-    public void OnRemove()
+    public void RemoveNode()
     {
         OnStop();
-        gameObject.SetActive(false);
-
+        Destroy(audioSource);
+        
+        SetAnchorLock(false);
+        Destroy(gameObject);
+        Destroy(this);
     }
 
     public void OnEditing()

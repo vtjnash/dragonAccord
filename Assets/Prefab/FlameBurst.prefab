@@ -72,10 +72,6 @@ GameObject:
   - 4: {fileID: 4000013105199886}
   - 198: {fileID: 198000011943008804}
   - 199: {fileID: 199000013776992896}
-  - 82: {fileID: 82000013171485180}
-  - 114: {fileID: 114000010926590888}
-  - 114: {fileID: 114000011608264084}
-  - 135: {fileID: 135000013030502778}
   m_Layer: 0
   m_Name: FlameBurst
   m_TagString: Untagged
@@ -104,7 +100,7 @@ Transform:
   m_GameObject: {fileID: 1000013958843928}
   m_LocalRotation: {x: -0.7071068, y: 0, z: 0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0.2, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children:
   - {fileID: 4000011837907574}
@@ -138,139 +134,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 4000013105199886}
   m_RootOrder: 2
---- !u!82 &82000013171485180
-AudioSource:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013958843928}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 984e21c3b649d8a4e9bcbfcc03aa1b8d, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 1
-  Mute: 0
-  Spatialize: 0
-  Priority: 160
-  DopplerLevel: 0.01
-  MinDistance: 2
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0.046771657
-      value: 0.8589018
-      inSlope: -7.686469
-      outSlope: -7.686469
-      tangentMode: 0
-    - time: 0.06640054
-      value: 0.5116857
-      inSlope: -17.395208
-      outSlope: -17.395208
-      tangentMode: 0
-    - time: 0.097607225
-      value: 0.24636672
-      inSlope: -11.7649765
-      outSlope: -11.7649765
-      tangentMode: 0
-    - time: 0.1537109
-      value: 0.0038062285
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    - time: 1
-      value: 0.002
-      inSlope: -0.002000801
-      outSlope: -0.002000801
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - time: 0
-      value: 0.7021627
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 0
---- !u!114 &114000010926590888
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013958843928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8b70855b105f7414397f24e69428803e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  audioSource: {fileID: 82000013171485180}
-  particles:
-  - {fileID: 1000011998890848}
-  - {fileID: 1000010729470100}
-  - {fileID: 1000013669495578}
-  Id: 0
-  Stopped: 0
-  masterSource: {fileID: 0}
---- !u!114 &114000011608264084
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013958843928}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2dc6bf181cdb14aab9c6f511c928132c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  beatWindow: 10
-  beatMask: 0
---- !u!135 &135000013030502778
-SphereCollider:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1000013958843928}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 1.8
-  m_Center: {x: -2.910383e-10, y: -6.9849193e-10, z: 0}
 --- !u!198 &198000011757830444
 ParticleSystem:
   m_ObjectHideFlags: 1

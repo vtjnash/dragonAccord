@@ -157,7 +157,9 @@ namespace HoloToolkit.Unity
             if (FocusedObject != null)
             {
                 FocusedObject.SendMessage("OnSelect");
+
             }
+
         }
 
         private void ManipulationRecognizer_ManipulationStartedEvent(InteractionSourceKind source, Vector3 cumulativeDelta, Ray headRay)

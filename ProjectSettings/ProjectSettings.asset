@@ -9,7 +9,7 @@ PlayerSettings:
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
-  accelerometerFrequency: 60
+  accelerometerFrequency: 15
   companyName: DefaultCompany
   productName: Dragon Accord
   defaultCursor: {fileID: 0}

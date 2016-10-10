@@ -27,33 +27,23 @@ public class SpeechManager : MonoBehaviour
 
         keywords.Add("Move", () =>
         {
-            var focusObject = GazeManager.Instance.FocusedObject;
+            SequenceManager.Instance.Move();
+            /*var focusObject = GazeManager.Instance.FocusedObject;
             if (focusObject != null)
             {
                 // Call the OnDrop method on just the focused object.
                 focusObject.SendMessage("OnMove");
-            }
+            }*/
         });
 
         keywords.Add("Drop", () =>
         {
-            
-            var focusObject = GazeManager.Instance.FocusedObject;
-            if (focusObject != null)
-            {
-                // Call the OnDrop method on just the focused object.
-                focusObject.SendMessage("OnDrop");
-            }
+            SequenceManager.Instance.Drop();
         });
 
         keywords.Add("Remove", () =>
         {
-            var focusObject = GazeManager.Instance.FocusedObject;
-            if (focusObject != null)
-            {
-                // Call the OnDrop method on just the focused object.
-                focusObject.SendMessage("OnRemove");
-            }
+           // SequenceManager.Instance.RemoveNode();
         });
 
         keywords.Add("Stop", () =>
@@ -69,14 +59,14 @@ public class SpeechManager : MonoBehaviour
 
         keywords.Add("Change", () =>
         {
-
-            var focusObject = GazeManager.Instance.FocusedObject;
-            if (focusObject != null)
-            {
-                // Call the OnDrop method on just the focused object.
-                focusObject.SendMessage("OnChange");
-            }
+            SequenceManager.Instance.Change();
         });
+
+        keywords.Add("Clone", () =>
+        {
+            SequenceManager.Instance.Clone();
+        });
+
 
         keywords.Add("Play", () =>
         {
@@ -110,6 +100,12 @@ public class SpeechManager : MonoBehaviour
                 // Call the OnDrop method on just the focused object.
                 focusObject.SendMessage("OnUnlock");
             }
+        });
+
+        keywords.Add("Clear All Nodes", () =>
+        {
+
+            SequenceManager.Instance.OnRemoveAllNodes();
         });
 
 

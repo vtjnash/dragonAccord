@@ -13,6 +13,8 @@ public class SequenceManager : Singleton<SequenceManager> {
     public List<AudioClip> audioClips;
     public List<GameObject> musicNodes;
 
+    public GameObject activeSelection;
+
     private int order;
 
     public GameObject sequence;
@@ -44,36 +46,150 @@ public class SequenceManager : Singleton<SequenceManager> {
         
     }
 
-    public void DestroyNode(int id)
+
+
+    public void Change()
     {
-       // musicNodes[id]
-        //BeatCounter.Instance.observersList[id]
+        var focusObject = GazeManager.Instance.FocusedObject;
+        if (focusObject != null && focusObject.CompareTag("MusicNote"))
+        {
+
+            int noteId = order;// (int)Random.Range(0, (prefabs.Count - 1));
+            order++;
+            if (order >= prefabs.Count)
+            {
+                order = 0;
+            }
+            GameObject prefabNote = prefabs[noteId];
+            MusicNode musicNode = (focusObject.GetComponent<MusicNode>() as MusicNode);
+            musicNode.DestroyClipMarker();
+            musicNode.SetClipMarker(prefabNote);
+            musicNode.SetAudioClip(audioClips[noteId]);
+            musicNode.FlagSync();
+
+        }
+    }
+
+    public void Clone()
+    {
+        var focusObject = GazeManager.Instance.FocusedObject;
+        if (focusObject != null && focusObject.CompareTag("MusicNote"))
+        {
+
+            MusicNode originalMusicNode = (focusObject.GetComponent<MusicNode>() as MusicNode);
+            GameObject note = Instantiate(focusObject, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
+            //note.transform.localScale = originalMusicNode.transform.localScale;
+            note.transform.parent = sequence.transform;
+            MusicNode musicNode = (note.GetComponent<MusicNode>() as MusicNode);
+            musicNode.OnMove();
+            musicNode.SetClipMarker(originalMusicNode.clipPrefab);
+            //musicNode.clipMarker.transform.localScale = originalMusicNode.clipMarker.transform.localScale;
+            musicNode.SetNodeID(musicNodes.Count);
+            musicNode.SetAnchorID("node" + musicNodes.Count.ToString());
+            musicNode.SetAudioClip(originalMusicNode.audioSource.clip);
+            musicNodes.Add(note);
+            musicNode.SetMasterAudioSync(masterAudio);
+            BeatCounter.Instance.observersList.Add(note);
+        }
+    }
+
+    public void Move()
+    {
+        if (activeSelection)
+        {
+
+        }
+        else
+        {
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                focusObject.SendMessage("OnMove");
+            }
+            activeSelection = focusObject;
+        }
+    }
+
+    public void Drop()
+    {
+        if (!activeSelection)
+        {
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                focusObject.SendMessage("OnDrop");
+            }
+        }
+        else
+        {
+            activeSelection.SendMessage("OnDrop");
+            activeSelection = null;
+        }
+    }
+
+
+    public void RemoveNode(int nodeID)
+    {
+        BeatCounter.Instance.observersList.RemoveAt(nodeID);
+    }
+
+    public void RemoveFocusedNode()
+    {
+        var focusObject = GazeManager.Instance.FocusedObject;
+        if (focusObject != null && focusObject.GetComponent<MusicNode>() != null)
+        {
+            MusicNode musicNode = focusObject.GetComponent<MusicNode>();
+            
+           // BeatCounter.Instance.observersList.Remove(musicNode.GetAnchorID);
+           // musicNode.RemoveNode();
+        }
+
+    }
+
+    public void OnRemoveAllNodes()
+    {
+        int i;
+        int limit = musicNodes.Count;
+        for (i=0;i<limit;++i)
+        {
+            MusicNode musicNode = musicNodes[i].GetComponent<MusicNode>();
+            musicNode.RemoveNode();
+        }
+
+        BeatCounter.Instance.observersList = new List<GameObject>();
+        /*limit = BeatCounter.Instance.observersList.Count;
+        for (i = 0; i < limit; ++i)
+        {
+            BeatCounter.Instance.observersList[i] = null;
+        }*/
     }
 
     public void OnPlaceNote()
     {
-        //clipValue = 
         
-        int noteID = (int)Random.Range(0, (prefabs.Count - 1));
+        int randNote = (int)Random.Range(0, (prefabs.Count - 1));
         order++;
         if (order >= prefabs.Count)
         {
             order = 0;
         }
-        Debug.Log(noteID);
-        GameObject prefabNote = prefabs[noteID];
-        GameObject note = Instantiate(prefabNote, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
-
+        
+        GameObject note = Instantiate(NotePrefab, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
+        
         note.transform.parent = sequence.transform;
         MusicNode musicNode = (note.GetComponent<MusicNode>() as MusicNode);
+        GameObject prefabNote = prefabs[randNote];
+        musicNode.SetClipMarker(prefabNote);
         // musicNode.GetComponent<AudioSource>
-        musicNode.SetNodeID(noteID);
+        musicNode.SetNodeID(randNote);
         musicNode.SetAnchorID("node"+ musicNodes.Count.ToString());
-        musicNode.SetAudioClip(audioClips[noteID]);
+        musicNode.SetAudioClip(audioClips[randNote]);
         musicNodes.Add(note);
         musicNode.SetMasterAudioSync(masterAudio);
         BeatCounter.Instance.observersList.Add(note);
     }
+
+
 
     private void CheckSequence()
     {

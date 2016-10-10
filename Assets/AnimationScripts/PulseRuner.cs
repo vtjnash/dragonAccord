@@ -5,11 +5,12 @@ public class PulseRuner : MonoBehaviour {
 	public GameObject pulseSphereTemplate;
 	public float timeScale = 2.0f;
 	public float maxSolid = 0.5f;
+    public int numPasses = 3;
 
 	// Use this for initialization
 	void Start () {
 		float timeBase = Time.time;
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < numPasses; i++) {
 			GameObject sphere = (GameObject)Instantiate(pulseSphereTemplate, transform.position, Quaternion.identity);
 			sphere.GetComponent<Pulse>().init(timeScale, maxSolid, timeBase);
 			timeBase += timeScale / 10;

@@ -20,6 +20,10 @@ public class MusicNode : MonoBehaviour {
     public bool IsSynced { get; private set; }
     public bool AnchorLocked { get; private set; }
 
+    private bool SyncingOnBeat;
+    private float MaxRange;
+    private float minRange;
+
     private float timeScale = 1;
     private float maxSolid = 0;
     private float timeBase = 0;
@@ -59,6 +63,7 @@ public class MusicNode : MonoBehaviour {
     void Start () {
         
         OnUnlock();
+        //SyncingOnBeat = true;
     }
 
     public void SetAnchorID(string id)
@@ -120,6 +125,7 @@ public class MusicNode : MonoBehaviour {
             gameObject.transform.position = Camera.main.transform.position + Camera.main.transform.forward * 2;
         }
     }
+
 
     void AnchorStoreReady(WorldAnchorStore store)
     {
@@ -211,7 +217,11 @@ public class MusicNode : MonoBehaviour {
                 transform.localScale = new Vector3(scale, scale, scale);*/
             }
 
-
+            if (SyncingOnBeat)
+            {
+                IsSynced = false;
+                audioSource.timeSamples = 0;// masterSource.timeSamples;
+            }
             //em.burstCount = SequenceManager.Instance.bpm / 10;
         }
     }
@@ -314,12 +324,24 @@ public class MusicNode : MonoBehaviour {
 
     public void RemoveNode()
     {
-        OnStop();
+        /*OnStop();
         Destroy(audioSource);
         
         SetAnchorLock(false);
         Destroy(gameObject);
-        Destroy(this);
+        Destroy(this);*/
+
+        gameObject.SetActive(false);
+    }
+
+    public void SyncOnBeat()
+    {
+        SyncingOnBeat = true;
+    }
+
+    public void SyncOnBar()
+    {
+        SyncingOnBeat = false;
     }
 
     public void OnEditing()
@@ -348,6 +370,13 @@ public class MusicNode : MonoBehaviour {
     public void OnUnlock()
     {
         SetAnchorLock(false);
+    }
+
+    public void OnVolume(float setting)
+    {
+        audioSource.volume = setting;
+        float scaleSize = (float) (audioSource.volume * 1.5);
+        transform.localScale = new Vector3(scaleSize, scaleSize, scaleSize);
     }
 
 

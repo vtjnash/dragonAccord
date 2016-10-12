@@ -57,6 +57,50 @@ public class SpeechManager : MonoBehaviour
             }
         });
 
+        keywords.Add("Set Volume Low", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnVolume",0.25f);
+            }
+        });
+
+        keywords.Add("Set Volume Medium", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnVolume", 0.5f);
+            }
+        });
+
+        keywords.Add("Set Volume High", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnVolume", 0.75f);
+            }
+        });
+
+        keywords.Add("Set Volume Max", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("OnVolume", 1f);
+            }
+        });
+
         keywords.Add("Change", () =>
         {
             SequenceManager.Instance.Change();
@@ -65,6 +109,28 @@ public class SpeechManager : MonoBehaviour
         keywords.Add("Clone", () =>
         {
             SequenceManager.Instance.Clone();
+        });
+
+        keywords.Add("Sync On Beat", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("SyncOnBeat");
+            }
+        });
+
+        keywords.Add("Sync On Bar", () =>
+        {
+
+            var focusObject = GazeManager.Instance.FocusedObject;
+            if (focusObject != null)
+            {
+                // Call the OnDrop method on just the focused object.
+                focusObject.SendMessage("SyncOnBar");
+            }
         });
 
 

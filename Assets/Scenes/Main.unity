@@ -185,8 +185,9 @@ TextMesh:
     Move a note, either air tap while looking at it, or say\r\n\"Move\"\r\n\r\nTo
     Drop a note in place air tap again, or say\r\n\"Drop\"\r\n\r\nTo Clone an existing
     note, say\r\n\"Clone\"\r\n\r\nTo Start over with a blank slate, say\r\n\"Clear
-    All Nodes\"\r\n\r\n\r\nWe hope you enjoy this as much as we did making it.\r\n~Psychadelic
-    Lizards"
+    All Nodes\"\r\n\r\nYou can adjust Volume of individual nodes, say\r\n\"Set Volume\"
+    \ ~\"Low\"  ~\"Medium\" ~\"High\"  ~\"Max\"\r\n\r\n\r\nWe hope you enjoy this
+    as much as we did making it.\r\n~Psychadelic Lizards"
   m_OffsetZ: 0
   m_CharacterSize: 0.003
   m_LineSpacing: 1
@@ -236,7 +237,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 410479125}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.031, y: 0.09596163, z: 3.047}
+  m_LocalPosition: {x: 0.031, y: 0.691, z: 3.047}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_Children: []

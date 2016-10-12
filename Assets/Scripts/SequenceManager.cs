@@ -46,6 +46,7 @@ public class SequenceManager : Singleton<SequenceManager> {
         
     }
 
+    
 
 
     public void Change()
@@ -77,7 +78,7 @@ public class SequenceManager : Singleton<SequenceManager> {
         {
 
             MusicNode originalMusicNode = (focusObject.GetComponent<MusicNode>() as MusicNode);
-            GameObject note = Instantiate(focusObject, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
+            GameObject note = Instantiate(NotePrefab, Cursor.transform.position, Cursor.transform.rotation) as GameObject;
             //note.transform.localScale = originalMusicNode.transform.localScale;
             note.transform.parent = sequence.transform;
             MusicNode musicNode = (note.GetComponent<MusicNode>() as MusicNode);
@@ -87,6 +88,7 @@ public class SequenceManager : Singleton<SequenceManager> {
             musicNode.SetNodeID(musicNodes.Count);
             musicNode.SetAnchorID("node" + musicNodes.Count.ToString());
             musicNode.SetAudioClip(originalMusicNode.audioSource.clip);
+            musicNode.OnVolume(originalMusicNode.audioSource.volume);
             musicNodes.Add(note);
             musicNode.SetMasterAudioSync(masterAudio);
             BeatCounter.Instance.observersList.Add(note);
@@ -156,7 +158,7 @@ public class SequenceManager : Singleton<SequenceManager> {
             musicNode.RemoveNode();
         }
 
-        BeatCounter.Instance.observersList = new List<GameObject>();
+        //BeatCounter.Instance.observersList = new List<GameObject>();
         /*limit = BeatCounter.Instance.observersList.Count;
         for (i = 0; i < limit; ++i)
         {
@@ -184,6 +186,7 @@ public class SequenceManager : Singleton<SequenceManager> {
         musicNode.SetNodeID(randNote);
         musicNode.SetAnchorID("node"+ musicNodes.Count.ToString());
         musicNode.SetAudioClip(audioClips[randNote]);
+        musicNode.OnVolume(.75f);
         musicNodes.Add(note);
         musicNode.SetMasterAudioSync(masterAudio);
         BeatCounter.Instance.observersList.Add(note);

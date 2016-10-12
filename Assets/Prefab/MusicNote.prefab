@@ -62,7 +62,7 @@ AudioSource:
   Priority: 160
   DopplerLevel: 0.01
   MinDistance: 2
-  MaxDistance: 500
+  MaxDistance: 100
   Pan2D: 0
   rolloffMode: 0
   BypassEffects: 0
@@ -102,7 +102,7 @@ AudioSource:
   panLevelCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
+    - time: 0.15762272
       value: 1
       inSlope: 0
       outSlope: 0
@@ -113,8 +113,8 @@ AudioSource:
   spreadCustomCurve:
     serializedVersion: 2
     m_Curve:
-    - time: 0
-      value: 0
+    - time: 0.0077519375
+      value: 0.0532872
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -125,7 +125,7 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - time: 0
-      value: 0.7021627
+      value: 0.7668686
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -145,7 +145,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   audioSource: {fileID: 82000011588752604}
   particles: []
+  animations: []
   clipMarker: {fileID: 0}
+  clipPrefab: {fileID: 0}
   Id: 0
   Stopped: 0
   masterSource: {fileID: 0}
